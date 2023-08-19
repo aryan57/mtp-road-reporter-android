@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Road Reporter</string>
+    <string name="login">Login</string>
+    <string name="enter_email">Enter email</string>
+    <string name="enter_password">Enter password</string>
+    <string name="submit">Submit</string>
+    <string name="error_while_logging_in">Error while logging in</string>
+    <string name="signup">Sign Up</string>
+    <string name="enter_name">Enter Name</string>
+    <string name="error_while_signup">Error While Signup</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="logout">Logout</string>
+    <string name="fetch_profile">Fetch Profile</string>
+    <string name="new_to_app_click_here_to_register">New to App? Click Here to Register</string>
+    <string name="already_have_an_account_click_here_to_login">Already have an account? Click here to Login</string>
+    <string name="role">Role</string>
+</resources>
