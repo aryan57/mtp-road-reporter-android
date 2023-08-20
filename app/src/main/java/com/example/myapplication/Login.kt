@@ -15,7 +15,6 @@ import com.android.volley.RequestQueue
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.textfield.TextInputEditText
-import org.json.JSONException
 import org.json.JSONObject
 
 class Login : AppCompatActivity() {
@@ -61,7 +60,7 @@ class Login : AppCompatActivity() {
 
                 progressBar.visibility = View.GONE
                 Log.i("TAG", "${Constants.API_PATH_LOGIN} response: "+response.toString())
-                Toast.makeText(this,response.toString(),Toast.LENGTH_SHORT).show()
+                Toast.makeText(this,"Login successful",Toast.LENGTH_SHORT).show()
                 try {
                     val editor = sharedPreferences.edit()
                     editor.putString("access_token",response.getJSONObject("user").getString("access_token"))
@@ -69,16 +68,24 @@ class Login : AppCompatActivity() {
                     editor.apply()
                     openHomepage()
 
-                }catch (e: JSONException){
-                    errorText.text = e.localizedMessage
+                }catch (e: Exception){
+                    errorText.text = e.message
                     errorText.visibility = View.VISIBLE
+                    Log.e("TAG", "JSONException: "+e.message)
                 }
 
             }, { error ->
+                var errorMessage = "Some error occurred"
+                try {
+                    val errorJson = JSONObject(String(error.networkResponse.data))
+                    errorMessage = errorJson.getString("message")
+                }catch (_: Exception){
+                }
+
                 progressBar.visibility = View.GONE
-                errorText.text = error.localizedMessage
+                errorText.text = errorMessage
                 errorText.visibility = View.VISIBLE
-                Log.e("TAG", "${Constants.API_PATH_LOGIN} error: "+error.message)
+                Log.e("TAG", "${Constants.API_PATH_LOGIN} error: "+errorMessage)
             })
             queue.add(request)
         }

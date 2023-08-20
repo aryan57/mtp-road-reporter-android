@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
                 Log.i("TAG", "${Constants.API_PATH_WHOAMI} response: "+response.toString())
                 Toast.makeText(this,response.toString(),Toast.LENGTH_SHORT).show()
             }, { error ->
-                Log.e("TAG", "${Constants.API_PATH_WHOAMI} error: "+error.message)
+                Log.e("TAG", "${Constants.API_PATH_WHOAMI} error: "+ String(error.networkResponse.data))
             })
             {
                 // Override the headers for the request

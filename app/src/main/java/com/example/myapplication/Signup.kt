@@ -8,13 +8,13 @@ import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.textfield.TextInputEditText
-import org.json.JSONException
 import org.json.JSONObject
 
 class Signup : AppCompatActivity() {
@@ -67,20 +67,22 @@ class Signup : AppCompatActivity() {
 
                     progressBar.visibility = View.GONE
                     Log.i("TAG", "${Constants.API_PATH_SIGNUP} response: "+response.toString())
-                    try {
-                        val intent = Intent(this, Login::class.java)
-                        startActivity(intent)
-                        finish()
-                    } catch (e: JSONException) {
-                        errorText.text = e.localizedMessage
-                        errorText.visibility = View.VISIBLE
-                    }
+                    Toast.makeText(this,"Signup Successful",Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, Login::class.java)
+                    startActivity(intent)
+                    finish()
 
                 }, { error ->
+                    var errorMessage = "Some error occurred"
+                    try {
+                        val errorJson = JSONObject(String(error.networkResponse.data))
+                        errorMessage = errorJson.getString("message")
+                    }catch (_: Exception){
+                    }
                     progressBar.visibility = View.GONE
-                    errorText.text = error.localizedMessage
+                    errorText.text = errorMessage
                     errorText.visibility = View.VISIBLE
-                    Log.e("TAG", "${Constants.API_PATH_SIGNUP} error: "+error.message)
+                    Log.e("TAG", "${Constants.API_PATH_SIGNUP} error: "+errorMessage)
                 })
 
             queue.add(request)
