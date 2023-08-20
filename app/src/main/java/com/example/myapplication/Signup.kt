@@ -2,7 +2,6 @@ package com.example.myapplication
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.AutoCompleteTextView
 import android.widget.Button
@@ -11,27 +10,28 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.Volley
+import com.example.myapplication.utils.ApiRequestHandler
+import com.example.myapplication.utils.Constants
 import com.google.android.material.textfield.TextInputEditText
 import org.json.JSONObject
 
 class Signup : AppCompatActivity() {
 
-    private lateinit var  emailText : TextInputEditText
-    private lateinit var  nameText : TextInputEditText
-    private lateinit var  passwordText : TextInputEditText
+    private lateinit var emailText: TextInputEditText
+    private lateinit var nameText: TextInputEditText
+    private lateinit var passwordText: TextInputEditText
     private lateinit var submitButton: Button
     private lateinit var loginNow: TextView
     private lateinit var errorText: TextView
     private lateinit var progressBar: ProgressBar
     private lateinit var roleDropdown: AutoCompleteTextView
+    private lateinit var apiRequestHandler: ApiRequestHandler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup)
 
+        apiRequestHandler = ApiRequestHandler(this)
         emailText = findViewById(R.id.email)
         nameText = findViewById(R.id.name)
         passwordText = findViewById(R.id.password)
@@ -42,51 +42,43 @@ class Signup : AppCompatActivity() {
         roleDropdown = findViewById(R.id.user_role_dropdown)
 
         loginNow.setOnClickListener {
-            val intent = Intent(this, Login::class.java)
-            startActivity(intent)
-            finish()
+            openLoginPage()
         }
-
-//        roleDropdown.setOnItemClickListener { parent, _, position, _ ->
-//            val str = parent.getItemAtPosition(position) as String
-//        }
 
         submitButton.setOnClickListener {
 
             progressBar.visibility = View.VISIBLE
             errorText.visibility = View.GONE
+            submitButton.isEnabled = false
 
-            val queue: RequestQueue = Volley.newRequestQueue(this)
-            val url = Constants.SERVER_BASE_URL + Constants.API_VERSION + Constants.API_PATH_SIGNUP
             val postData = JSONObject()
             postData.put("email", emailText.text)
             postData.put("password", passwordText.text)
             postData.put("role", roleDropdown.text)
-            val request =
-                JsonObjectRequest(Request.Method.POST, url, postData, { response ->
+            postData.put("name", nameText.text)
 
-                    progressBar.visibility = View.GONE
-                    Log.i("TAG", "${Constants.API_PATH_SIGNUP} response: "+response.toString())
-                    Toast.makeText(this,"Signup Successful",Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this, Login::class.java)
-                    startActivity(intent)
-                    finish()
-
-                }, { error ->
-                    var errorMessage = "Some error occurred"
-                    try {
-                        val errorJson = JSONObject(String(error.networkResponse.data))
-                        errorMessage = errorJson.getString("message")
-                    }catch (_: Exception){
-                    }
-                    progressBar.visibility = View.GONE
+            apiRequestHandler.makeApiRequest(Request.Method.POST,
+                Constants.API_PATH_SIGNUP,
+                postData,
+                {
+                    Toast.makeText(this, "Signup Successful", Toast.LENGTH_SHORT).show()
+                    openLoginPage()
+                },
+                { errorMessage ->
                     errorText.text = errorMessage
                     errorText.visibility = View.VISIBLE
-                    Log.e("TAG", "${Constants.API_PATH_SIGNUP} error: "+errorMessage)
+                },
+                {
+                    submitButton.isEnabled = true
+                    progressBar.visibility = View.GONE
                 })
-
-            queue.add(request)
         }
 
+    }
+
+    private fun openLoginPage() {
+        val intent = Intent(this, Login::class.java)
+        startActivity(intent)
+        finish()
     }
 }
