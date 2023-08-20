@@ -92,30 +92,7 @@ class Login : AppCompatActivity() {
 
     private fun checkFromStoredTokens() {
         if (!TokenManager.hasTokens()) return
-
-        progressBar.visibility = View.VISIBLE
-        // if user already logged in with the saved tokens go to homepage
-        apiRequestHandler.makeApiRequest(Request.Method.GET,
-            Constants.API_PATH_WHOAMI,
-            null,
-            { response ->
-                try {
-                    val name = response.getJSONObject("user").getString("name")
-                    Toast.makeText(this, "Hello: $name", Toast.LENGTH_SHORT).show()
-                    openHomepage()
-                } catch (e: Exception) {
-                    errorText.text = e.message
-                    errorText.visibility = View.VISIBLE
-                    Log.e("TAG", "error parsing json : $response")
-                }
-            },
-            {
-                // could not login from stored tokens, so user has to re-login
-                TokenManager.clearTokens()
-            },
-            {
-                progressBar.visibility = View.GONE
-            })
+        openHomepage()
     }
 
     private fun openHomepage() {
