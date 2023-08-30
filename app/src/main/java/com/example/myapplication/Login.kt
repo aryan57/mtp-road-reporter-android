@@ -69,7 +69,7 @@ class Login : AppCompatActivity() {
                     } catch (e: Exception) {
                         errorText.text = e.message
                         errorText.visibility = View.VISIBLE
-                        Log.e("TAG", "error parsing json : $response")
+                        Log.e(Constants.LOG_TAG_NAME, "error parsing json : $response")
                     }
                 },
                 { errorMessage ->

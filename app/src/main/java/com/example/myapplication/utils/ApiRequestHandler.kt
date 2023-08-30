@@ -27,7 +27,7 @@ class ApiRequestHandler(private val context: Context) {
         val fullUrl = Constants.SERVER_BASE_URL + Constants.API_VERSION + url
         val request = object : JsonObjectRequest(method, fullUrl, jsonRequest,
             { response ->
-                Log.i("TAG", "$url response: $response")
+                Log.i(Constants.LOG_TAG_NAME, "$url response: $response")
                 onSuccess(response)
                 onFinally()
             },
@@ -47,7 +47,7 @@ class ApiRequestHandler(private val context: Context) {
                     )
                 } else {
                     val errorMessage = parseErrorMessage(error)
-                    Log.i("TAG", "$url error: $errorMessage")
+                    Log.i(Constants.LOG_TAG_NAME, "$url error: $errorMessage")
                     onError(errorMessage)
                     onFinally()
                 }
@@ -74,15 +74,15 @@ class ApiRequestHandler(private val context: Context) {
             { response ->
                 try {
                     TokenManager.setAccessToken(response.getJSONObject("user").getString("access_token"))
-                    Log.i("TAG", "refresh token success.")
+                    Log.i(Constants.LOG_TAG_NAME, "refresh token success.")
                     onSuccess()
                 }catch (e: Exception){
-                    Log.e("TAG", "refresh token error: "+e.message)
+                    Log.e(Constants.LOG_TAG_NAME, "refresh token error: "+e.message)
                     onError()
                 }
             },
             { error ->
-                Log.e("TAG","refresh token error: "+parseErrorMessage(error))
+                Log.e(Constants.LOG_TAG_NAME,"refresh token error: "+parseErrorMessage(error))
                 onError()
             }) {
             override fun getHeaders(): MutableMap<String, String> {

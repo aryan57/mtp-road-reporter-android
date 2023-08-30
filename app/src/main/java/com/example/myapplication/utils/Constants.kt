@@ -14,4 +14,6 @@ object Constants {
     const val USER_CONFIG_EMAIL = "USER_CONFIG_EMAIL"
     const val TOKEN_CONFIG_ACCESS_TOKEN = "access_token"
     const val TOKEN_CONFIG_REFRESH_TOKEN = "refresh_token"
+
+    const val LOG_TAG_NAME = "TAG"
 }

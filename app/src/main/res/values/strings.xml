@@ -15,4 +15,7 @@
     <string name="new_to_app_click_here_to_register">New to App? Click Here to Register</string>
     <string name="already_have_an_account_click_here_to_login">Already have an account? Click here to Login</string>
     <string name="role">Role</string>
+    <string name="do_inference">do inference</string>
+    <string name="select_image">Select Image</string>
+    <string name="image_which_is_getting_inferred">Image which is getting inferred</string>
 </resources>
