@@ -1,0 +1,22 @@
+[
+  {
+    "categoryName": "fallen-tree",
+    "id": 1,
+    "isTrained": true
+  },
+  {
+    "categoryName": "garbage",
+    "id": 2,
+    "isTrained": true
+  },
+  {
+    "categoryName": "pothole",
+    "id": 3,
+    "isTrained": true
+  },
+  {
+    "categoryName": "road",
+    "id": 4,
+    "isTrained": true
+  }
+]
