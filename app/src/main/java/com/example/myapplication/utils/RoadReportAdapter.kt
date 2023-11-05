@@ -17,8 +17,12 @@ import com.example.myapplication.utils.RoadReport
 import com.example.myapplication.utils.UtilityFunctions
 
 
-class RoadReportAdapter :
+class RoadReportAdapter(private val onReportDeleted: OnReportDeletedListener) :
     ListAdapter<RoadReport, RoadReportAdapter.RoadReportViewHolder>(RoadReportDiffCallback()) {
+
+    interface OnReportDeletedListener {
+        fun onReportDeleted()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RoadReportViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -50,17 +54,17 @@ class RoadReportAdapter :
                 roadReport.latitude, roadReport.longitude
             )
 
-
             delete.setOnClickListener {
                 apiRequestHandler.makeApiRequest(Request.Method.DELETE,
                     Constants.API_PATH_DELETE_POST + "/" + roadReport.id.toString(),
                     null,
                     { response ->
                         Toast.makeText(
-                            itemView.context,
-                            "Delete successful. Please refresh.",
-                            Toast.LENGTH_SHORT
+                            itemView.context, response.getString("message"), Toast.LENGTH_SHORT
                         ).show()
+
+                        // Notify the fragment to refresh the list
+                        onReportDeleted.onReportDeleted()
 
                     },
                     { errorMessage ->

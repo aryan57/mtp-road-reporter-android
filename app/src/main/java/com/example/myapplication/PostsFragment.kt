@@ -16,13 +16,19 @@ import com.example.myapplication.utils.ApiRequestHandler
 import com.example.myapplication.utils.Constants
 import com.example.myapplication.utils.RoadReport
 
-class PostsFragment : Fragment() {
+class PostsFragment : Fragment(), RoadReportAdapter.OnReportDeletedListener {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var roadReportAdapter: RoadReportAdapter
     private lateinit var apiRequestHandler: ApiRequestHandler
     private lateinit var view: View
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // Initialize your adapter with this fragment as the listener
+        roadReportAdapter = RoadReportAdapter(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -31,9 +37,6 @@ class PostsFragment : Fragment() {
         apiRequestHandler = ApiRequestHandler(view.context)
 
         recyclerView = view.findViewById(R.id.postRecyclerView)
-
-        // Set up RecyclerView and adapter
-        roadReportAdapter = RoadReportAdapter() // Create your custom adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.addItemDecoration(
             DividerItemDecoration(
@@ -42,9 +45,16 @@ class PostsFragment : Fragment() {
         )
         recyclerView.adapter = roadReportAdapter
 
-        // Fetch posts from your API and update the adapter with the data
-        // Replace this with your actual API call and data population logic
+        updateRoadReportsList()
 
+        return view
+    }
+
+    override fun onReportDeleted() {
+        updateRoadReportsList()
+    }
+
+    private fun updateRoadReportsList() {
         val roadReports = mutableListOf<RoadReport>()
         apiRequestHandler.makeApiRequest(Request.Method.GET,
             Constants.API_PATH_ALLPOSTS,
@@ -81,8 +91,6 @@ class PostsFragment : Fragment() {
                 roadReportAdapter.submitList(roadReports)
 
             })
-
-        return view
     }
 
 }
