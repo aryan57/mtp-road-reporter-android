@@ -1,13 +1,18 @@
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.Request
 import com.bumptech.glide.Glide
 import com.example.myapplication.R
+import com.example.myapplication.utils.ApiRequestHandler
+import com.example.myapplication.utils.Constants
 import com.example.myapplication.utils.RoadReport
 import com.example.myapplication.utils.UtilityFunctions
 
@@ -33,8 +38,8 @@ class RoadReportAdapter :
         private val imageView: ImageView = itemView.findViewById(R.id.image)
         private val location: TextView = itemView.findViewById(R.id.location)
         private val description: TextView = itemView.findViewById(R.id.description)
-        //private val delete: Button = itemView.findViewById(R.id.delete)
-        //private val apiRequestHandler = ApiRequestHandler(itemView.context)
+        private val delete: Button = itemView.findViewById(R.id.delete)
+        private val apiRequestHandler = ApiRequestHandler(itemView.context)
 
         fun bind(roadReport: RoadReport) {
             userNameTextView.text = roadReport.name
@@ -45,7 +50,7 @@ class RoadReportAdapter :
                 roadReport.latitude, roadReport.longitude
             )
 
-            /*
+
             delete.setOnClickListener {
                 apiRequestHandler.makeApiRequest(Request.Method.DELETE,
                     Constants.API_PATH_DELETE_POST + "/" + roadReport.id.toString(),
@@ -53,10 +58,9 @@ class RoadReportAdapter :
                     { response ->
                         Toast.makeText(
                             itemView.context,
-                            response.getString("message"),
+                            "Delete successful. Please refresh.",
                             Toast.LENGTH_SHORT
-                        )
-                            .show()
+                        ).show()
 
                     },
                     { errorMessage ->
@@ -64,7 +68,7 @@ class RoadReportAdapter :
                     },
                     {})
             }
-            */
+
             Glide.with(imageView.context)
                 .load(UtilityFunctions.getImageUrlFromImgID(roadReport.imgID))
                 .placeholder(R.drawable.baseline_downloading_24).error(R.drawable.baseline_error_24)
